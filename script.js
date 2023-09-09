@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', function () {
     let previousOperand = '';
     let currentOperand = '';
     let operation = undefined;
+    let decimalAdded = false; // Track if decimal point is already added
 
     function updateDisplay() {
         currentOperandTextElement.innerText = currentOperand;
@@ -18,8 +19,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
     numberButtons.forEach(button => {
         button.addEventListener('click', () => {
+            if (button.innerText === '.' && decimalAdded) return; // Only one decimal point allowed
             if (currentOperand === '0' && button.innerText === '0') return;
             currentOperand += button.innerText;
+            if (button.innerText === '.') {
+                decimalAdded = true; // Mark decimal point as added
+            }
             updateDisplay();
         });
     });
@@ -33,6 +38,7 @@ document.addEventListener('DOMContentLoaded', function () {
             operation = button.innerText;
             previousOperand = currentOperand;
             currentOperand = '';
+            decimalAdded = false; // Reset decimal flag
             updateDisplay();
         });
     });
@@ -45,6 +51,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
     deleteButton.addEventListener('click', () => {
         currentOperand = currentOperand.toString().slice(0, -1);
+        if (!currentOperand.includes('.')) {
+            decimalAdded = false; // Reset decimal flag when deleting the decimal point
+        }
         updateDisplay();
     });
 
@@ -52,6 +61,7 @@ document.addEventListener('DOMContentLoaded', function () {
         currentOperand = '';
         previousOperand = '';
         operation = undefined;
+        decimalAdded = false; // Reset decimal flag
         updateDisplay();
     });
 
